@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#1E2A3A">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_and_sort"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSortAlphabetically"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sort_alphabetically"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2A3A4A"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_by_role"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFilterTank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/role_tank"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2A3A4A"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFilterDPS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/role_dps"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2A3A4A"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFilterSupport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/role_support"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2A3A4A"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFilterHealer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/role_healer"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2A3A4A"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFilterAssassin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/role_assassin"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2A3A4A"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnShowAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/show_all"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#4A90E2"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>
+
