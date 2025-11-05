@@ -1,0 +1,77 @@
+<resources>
+    <string name="app_name">Mis Personajes</string>
+
+    <!-- Main Screen -->
+    <string name="title_characters">Mis Personajes</string>
+    <string name="search_hint">Buscar personaje…</string>
+    <string name="add_character">Agregar Personaje</string>
+
+    <!-- Character List -->
+    <string name="filter_and_sort">Filtrar y Ordenar</string>
+    <string name="sort_alphabetically">Ordenar Alfabéticamente</string>
+    <string name="filter_by_role">Filtrar por Rol</string>
+    <string name="show_all">Mostrar Todos</string>
+
+    <!-- Roles -->
+    <string name="role_tank">Tank</string>
+    <string name="role_dps">DPS</string>
+    <string name="role_support">Support</string>
+    <string name="role_healer">Healer</string>
+    <string name="role_assassin">Assassin</string>
+
+    <!-- Character Detail -->
+    <string name="character_title">Personaje</string>
+    <string name="key_attributes">Atributos Clave</string>
+    <string name="type_class">Tipo/Clase</string>
+    <string name="role_function">Rol/Función</string>
+    <string name="faction_alignment">Facción/Alineamiento</string>
+    <string name="level_power">Nivel/Poder</string>
+    <string name="detailed_stats">Estadísticas Detalladas</string>
+    <string name="stat_attack">Ataque</string>
+    <string name="stat_defense">Defensa</string>
+    <string name="stat_speed">Velocidad</string>
+    <string name="stat_magic">Magia</string>
+    <string name="biography">Biografía</string>
+    <string name="btn_delete">Borrar</string>
+    <string name="btn_edit">Editar</string>
+    <string name="btn_back">Volver</string>
+
+    <!-- Add/Edit Character -->
+    <string name="add_character_title">Agregar Personaje</string>
+    <string name="create_character">Crear Personaje</string>
+    <string name="edit_character">Editar Personaje</string>
+    <string name="hint_name">Nombre del Personaje</string>
+    <string name="hint_image_url">URL de la Imagen</string>
+    <string name="label_race">Raza</string>
+    <string name="label_role">Rol</string>
+    <string name="label_type">Tipo/Clase</string>
+    <string name="hint_faction">Facción/Alineamiento</string>
+    <string name="hint_level">Nivel/Poder</string>
+    <string name="stats_title">Estadísticas</string>
+    <string name="hint_attack">Ataque</string>
+    <string name="hint_defense">Defensa</string>
+    <string name="hint_speed">Velocidad</string>
+    <string name="hint_magic">Magia</string>
+    <string name="hint_biography">Biografía</string>
+    <string name="btn_cancel">Cancelar</string>
+    <string name="btn_save">Guardar</string>
+
+    <!-- Messages -->
+    <string name="msg_fill_all_fields">Por favor completa todos los campos</string>
+    <string name="msg_character_created">Personaje creado exitosamente</string>
+    <string name="msg_character_updated">Personaje actualizado exitosamente</string>
+    <string name="msg_character_deleted">Personaje eliminado exitosamente</string>
+    <string name="msg_delete_confirmation">¿Estás seguro de que deseas eliminar a %1$s?</string>
+    <string name="msg_delete_title">Eliminar Personaje</string>
+
+    <!-- Error Messages -->
+    <string name="error_loading_data">Error al cargar los datos</string>
+    <string name="error_network">Error de conexión. Verifica tu internet.</string>
+    <string name="error_unknown">Ha ocurrido un error desconocido</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_character_image">Imagen del personaje</string>
+    <string name="cd_filter_button">Botón de filtro</string>
+    <string name="cd_add_character">Agregar nuevo personaje</string>
+    <string name="cd_back_button">Botón de retroceso</string>
+</resources>
