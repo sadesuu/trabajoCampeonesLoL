@@ -30,12 +30,16 @@ function doGet(e) {
     const id = e.parameter.id;
 
     for (let i = 1; i < data.length; i++) {
+      const rawImage = data[i][2] || '';
+      const rawRole = data[i][4] || '';
+
       const character = {
         id: data[i][0],
         name: data[i][1],
-        imageUrl: data[i][2],
+        imageUrl: rawImage,
+        imagePublicUrl: normalizeImageUrl(rawImage, rawRole),
         race: data[i][3],
-        role: data[i][4],
+        role: rawRole,
         type: data[i][5],
         faction: data[i][6],
         level: parseInt(data[i][7]) || 0,
@@ -290,3 +294,39 @@ function initializeWithSampleData() {
   Logger.log('Hoja inicializada con datos de ejemplo');
 }
 
+/**
+ * Normalize a Google Drive/Docs image URL or fallback to role if that contains the URL.
+ * Returns a direct viewable URL (https://drive.google.com/uc?export=view&id=FILE_ID) when possible.
+ */
+function normalizeImageUrl(imageUrl, role) {
+  var raw = (imageUrl || '').toString().trim();
+  var rawRole = (role || '').toString().trim();
+
+  function extractFromString(s) {
+    if (!s) return '';
+    // If direct googleusercontent link
+    if (s.indexOf('lh3.googleusercontent.com') !== -1) return s;
+    // If already uc? export
+    if (s.indexOf('drive.google.com/uc?') !== -1 || s.indexOf('docs.google.com/uc?') !== -1) return s;
+    // drive file pattern
+    var m = s.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if (m && m[1]) return 'https://drive.google.com/uc?export=view&id=' + m[1];
+    // id param
+    m = s.match(/[?&]id=([^&]+)/);
+    if (m && m[1]) return 'https://drive.google.com/uc?export=view&id=' + m[1];
+    // docs URLs
+    m = s.match(/docs\.google\.com\/.+\/d\/([^/]+)/);
+    if (m && m[1]) return 'https://drive.google.com/uc?export=view&id=' + m[1];
+    // http fallback
+    if (s.indexOf('http') === 0) return s;
+    return '';
+  }
+
+  var fromImage = extractFromString(raw);
+  if (fromImage) return fromImage;
+
+  var fromRole = extractFromString(rawRole);
+  if (fromRole) return fromRole;
+
+  return '';
+}

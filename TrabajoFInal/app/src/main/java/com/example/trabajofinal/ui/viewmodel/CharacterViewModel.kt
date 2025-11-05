@@ -1,5 +1,6 @@
 package com.example.trabajofinal.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,13 +30,19 @@ class CharacterViewModel : ViewModel() {
     fun loadCharacters() {
         viewModelScope.launch {
             _isLoading.value = true
+            Log.d("CharacterViewModel", "Loading characters...")
             try {
                 val data = repository.getCharacters()
+                Log.d("CharacterViewModel", "Received ${data.size} characters")
+                data.forEachIndexed { index, character ->
+                    Log.d("CharacterViewModel", "Character $index: name='${character.name}', type='${character.type}', role='${character.role}', imageUrl='${character.imageUrl}'")
+                }
                 allCharacters = data
                 _characters.value = data
                 _filteredCharacters.value = data
                 _error.value = null
             } catch (e: Exception) {
+                Log.e("CharacterViewModel", "Error loading characters", e)
                 _error.value = e.message
             } finally {
                 _isLoading.value = false

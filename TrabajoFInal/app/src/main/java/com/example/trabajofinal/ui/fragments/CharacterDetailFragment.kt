@@ -43,13 +43,42 @@ class CharacterDetailFragment : Fragment() {
     private fun displayCharacterDetails() {
         binding.tvCharacterName.text = character.name
         binding.tvCharacterType.text = character.type
-        binding.tvCharacterRole.text = character.role
 
-        Glide.with(this)
-            .load(character.imageUrl)
-            .placeholder(R.drawable.ic_launcher_foreground)
-            .error(R.drawable.ic_launcher_foreground)
-            .into(binding.ivCharacterImage)
+        // Función local para detectar si una cadena parece una URL/imagen
+        fun looksLikeUrl(s: String): Boolean {
+            if (s.isBlank()) return false
+            val lower = s.lowercase()
+            val extPattern = ".*\\.(png|jpg|jpeg|gif|webp)".toRegex(RegexOption.IGNORE_CASE)
+            return lower.contains("http") || lower.contains("drive.google.com") || lower.contains("docs.google.com") || lower.contains("googleusercontent.com") || extPattern.matches(s)
+        }
+
+        // Preferir la URL normalizada desde el backend
+        val candidateFromBackend = if (character.imagePublicUrl.isNotBlank()) character.imagePublicUrl else ""
+
+        val candidateImageField = when {
+            candidateFromBackend.isNotBlank() -> candidateFromBackend
+            looksLikeUrl(character.role) -> character.role
+            looksLikeUrl(character.imageUrl) -> character.imageUrl
+            else -> ""
+        }
+
+        val roleText = when {
+            character.imageUrl.isNotBlank() && !looksLikeUrl(character.imageUrl) -> character.imageUrl
+            character.role.isNotBlank() && !looksLikeUrl(character.role) -> character.role
+            else -> "Rol desconocido"
+        }
+
+        binding.tvCharacterRole.text = roleText
+
+        if (candidateImageField.isNotBlank()) {
+            Glide.with(this)
+                .load(candidateImageField)
+                .placeholder(R.drawable.ic_launcher_foreground)
+                .error(R.drawable.ic_launcher_foreground)
+                .into(binding.ivCharacterImage)
+        } else {
+            binding.ivCharacterImage.setImageResource(R.drawable.ic_launcher_foreground)
+        }
     }
 
     private fun setupButtons() {
@@ -100,4 +129,3 @@ class CharacterDetailFragment : Fragment() {
         }
     }
 }
-

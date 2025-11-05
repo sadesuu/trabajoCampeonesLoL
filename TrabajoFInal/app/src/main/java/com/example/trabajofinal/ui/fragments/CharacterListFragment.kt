@@ -45,7 +45,7 @@ class CharacterListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapter = CharacterAdapter(emptyList()) { character ->
+        adapter = CharacterAdapter { character ->
             // Navigate to detail fragment
             val detailFragment = CharacterDetailFragment.newInstance(character)
             parentFragmentManager.beginTransaction()
@@ -133,7 +133,7 @@ class CharacterListFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.filteredCharacters.observe(viewLifecycleOwner) { characters ->
-            adapter.updateCharacters(characters)
+            adapter.submitList(characters)
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -146,4 +146,3 @@ class CharacterListFragment : Fragment() {
         _binding = null
     }
 }
-

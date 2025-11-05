@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import com.example.trabajofinal.data.model.Character
 import com.example.trabajofinal.databinding.FragmentAddCharacterBinding
 import com.example.trabajofinal.ui.viewmodel.CharacterViewModel
-import java.util.UUID
 
 class AddCharacterFragment : Fragment() {
 
@@ -72,9 +71,10 @@ class AddCharacterFragment : Fragment() {
         }
 
         val character = Character(
-            id = UUID.randomUUID().toString(),
+            timestamp = "", // Timestamp vacío, se generará en el backend
             name = name,
             imageUrl = imageUrl,
+            imagePublicUrl = "", // Se generará en el backend
             type = type,
             role = role
         )

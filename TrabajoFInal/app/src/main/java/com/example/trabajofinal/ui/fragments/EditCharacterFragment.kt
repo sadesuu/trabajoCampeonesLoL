@@ -88,9 +88,10 @@ class EditCharacterFragment : Fragment() {
         }
 
         val updatedCharacter = Character(
-            id = character.id, // Keep the same ID
+            timestamp = character.timestamp, // Mantener el timestamp original
             name = name,
             imageUrl = imageUrl,
+            imagePublicUrl = character.imagePublicUrl, // Mantener el enlace directo original
             type = type,
             role = role
         )

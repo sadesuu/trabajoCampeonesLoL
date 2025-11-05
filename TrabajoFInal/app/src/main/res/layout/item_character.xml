@@ -36,14 +36,14 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView
-                android:id="@+id/tvCharacterName"
+                android:id="@+id/tv_character_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Character Name"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="8dp"
+                android:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

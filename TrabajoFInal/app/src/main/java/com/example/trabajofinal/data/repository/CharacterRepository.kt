@@ -1,5 +1,6 @@
 package com.example.trabajofinal.data.repository
 
+import android.util.Log
 import com.example.trabajofinal.data.model.Character
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -11,27 +12,42 @@ import java.net.URL
 class CharacterRepository {
 
     // URL de tu API de Google Apps Script
-    private val apiUrl = "https://script.google.com/macros/s/AKfycby8S4ntLE3Aa2ckd45rTS49QzLXtirdA5vdqDKx_7vKthIj11zbsvJGHysi8Z-hmhrQlw/exec"
+    private val apiUrl = "https://script.google.com/macros/s/AKfycbymP-W4ln9yhC7vqYhpBvbdASiO8wU81i3KJYqgifNJmYDcMTx54zbPf2CyK_40PLGwNw/exec"
 
     suspend fun getCharacters(): List<Character> {
         return withContext(Dispatchers.IO) {
             try {
+                Log.d("CharacterRepository", "Fetching characters from: $apiUrl")
                 val url = URL(apiUrl)
                 val connection = url.openConnection() as HttpURLConnection
                 connection.requestMethod = "GET"
-                connection.connectTimeout = 10000
-                connection.readTimeout = 10000
+                connection.connectTimeout = 15000
+                connection.readTimeout = 15000
+                connection.instanceFollowRedirects = true
 
                 val responseCode = connection.responseCode
+                Log.d("CharacterRepository", "Response code: $responseCode")
+
                 if (responseCode == HttpURLConnection.HTTP_OK) {
                     val response = connection.inputStream.bufferedReader().use { it.readText() }
+                    Log.d("CharacterRepository", "Response JSON (first 500 chars): ${response.take(500)}")
+
                     val gson = Gson()
                     val type = object : TypeToken<List<Character>>() {}.type
-                    gson.fromJson<List<Character>>(response, type)
+                    val characters = gson.fromJson<List<Character>>(response, type)
+
+                    Log.d("CharacterRepository", "Parsed ${characters.size} characters")
+                    characters.forEachIndexed { index, char ->
+                        Log.d("CharacterRepository", "Character $index: name='${char.name}', type='${char.type}', role='${char.role}', imageUrl='${char.imageUrl}', imagePublicUrl='${char.imagePublicUrl}'")
+                    }
+
+                    characters
                 } else {
+                    Log.e("CharacterRepository", "Error response code: $responseCode")
                     emptyList()
                 }
             } catch (e: Exception) {
+                Log.e("CharacterRepository", "Exception fetching characters", e)
                 e.printStackTrace()
                 emptyList()
             }
@@ -106,4 +122,3 @@ class CharacterRepository {
         }
     }
 }
-
