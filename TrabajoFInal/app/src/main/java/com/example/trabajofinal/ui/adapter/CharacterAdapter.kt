@@ -27,45 +27,35 @@ class CharacterAdapter(
 
         fun bind(character: Character, onCharacterClick: (Character) -> Unit) {
             // Log para debugging
-            Log.d("CharacterViewHolder", "Binding character: ${character.name}, type: ${character.type}, role(raw): ${character.role}, imageUrl(raw): ${character.imageUrl}, imagePublicUrl: ${character.imagePublicUrl}")
+            Log.d("CharacterViewHolder", "Binding character: ${character.name}, type: ${character.type}, role: ${character.role}, imageUrl: ${character.imageUrl}, imagePublicUrl: ${character.imagePublicUrl}")
 
-            // Asignar textos
-            nameTextView.text = character.name
-            raceTextView.text = if (character.type.isNotBlank()) character.type else "Tipo desconocido"
+            // Asignar textos directamente desde el JSON
+            nameTextView.text = character.name.ifBlank { "Sin nombre" }
+            raceTextView.text = character.type.ifBlank { "Tipo desconocido" }
+            roleTextView.text = character.role.ifBlank { "Rol desconocido" }
 
-            fun looksLikeUrl(s: String): Boolean {
-                if (s.isBlank()) return false
+            // Función simple para validar si una cadena parece una URL utilizable
+            fun isValidUrl(s: String?): Boolean {
+                if (s.isNullOrBlank()) return false
                 val lower = s.lowercase()
                 val extPattern = ".*\\.(png|jpg|jpeg|gif|webp)".toRegex(RegexOption.IGNORE_CASE)
-                return lower.contains("http") || lower.contains("drive.google.com") || lower.contains("docs.google.com") || lower.contains("googleusercontent.com") || extPattern.matches(s)
+                return lower.startsWith("http://") || lower.startsWith("https://") || lower.contains("drive.google.com") || lower.contains("docs.google.com") || lower.contains("googleusercontent.com") || extPattern.matches(s)
             }
 
-            // Preferir la URL ya normalizada que viene del backend
-            val candidateFromBackend = if (character.imagePublicUrl.isNotBlank()) character.imagePublicUrl else ""
-
-            val candidateImageField = when {
-                candidateFromBackend.isNotBlank() -> candidateFromBackend
-                looksLikeUrl(character.role) -> character.role
-                looksLikeUrl(character.imageUrl) -> character.imageUrl
+            // Priorizar imagePublicUrl (directa), luego imageUrl
+            val imageToLoad = when {
+                isValidUrl(character.imagePublicUrl) -> character.imagePublicUrl
+                isValidUrl(character.imageUrl) -> character.imageUrl
                 else -> ""
             }
 
-            val roleText = when {
-                character.imageUrl.isNotBlank() && !looksLikeUrl(character.imageUrl) -> character.imageUrl
-                character.role.isNotBlank() && !looksLikeUrl(character.role) -> character.role
-                else -> "Rol desconocido"
-            }
-
-            roleTextView.text = roleText
-
-            // Cargar imagen (sin conversión) - confiar en que el backend ya normalizó la URL
-            if (candidateImageField.isBlank()) {
+            if (imageToLoad.isBlank()) {
                 Log.w("CharacterViewHolder", "No se encontró URL de imagen válida para ${character.name}; se usa placeholder")
                 imageView.setImageResource(R.drawable.ic_launcher_foreground)
             } else {
-                Log.d("CharacterViewHolder", "Loading image from: $candidateImageField for ${character.name}")
+                Log.d("CharacterViewHolder", "Loading image from: $imageToLoad for ${character.name}")
                 Glide.with(itemView.context)
-                    .load(candidateImageField)
+                    .load(imageToLoad)
                     .placeholder(R.drawable.ic_launcher_foreground)
                     .error(R.drawable.ic_launcher_background)
                     .into(imageView)
