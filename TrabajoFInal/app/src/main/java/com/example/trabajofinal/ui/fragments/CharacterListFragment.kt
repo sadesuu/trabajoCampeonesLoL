@@ -97,28 +97,28 @@ class CharacterListFragment : Fragment() {
             dialog.dismiss()
         }
 
-        view.findViewById<View>(R.id.btnFilterTank).setOnClickListener {
-            viewModel.filterByRole("Tank")
+        view.findViewById<View>(R.id.btnFilterTop).setOnClickListener {
+            viewModel.filterByRole("Top")
             dialog.dismiss()
         }
 
-        view.findViewById<View>(R.id.btnFilterDPS).setOnClickListener {
-            viewModel.filterByRole("DPS")
+        view.findViewById<View>(R.id.btnFilterMid).setOnClickListener {
+            viewModel.filterByRole("Mid")
+            dialog.dismiss()
+        }
+
+        view.findViewById<View>(R.id.btnFilterJungler).setOnClickListener {
+            viewModel.filterByRole("Jungler")
+            dialog.dismiss()
+        }
+
+        view.findViewById<View>(R.id.btnFilterADC).setOnClickListener {
+            viewModel.filterByRole("ADC")
             dialog.dismiss()
         }
 
         view.findViewById<View>(R.id.btnFilterSupport).setOnClickListener {
             viewModel.filterByRole("Support")
-            dialog.dismiss()
-        }
-
-        view.findViewById<View>(R.id.btnFilterHealer).setOnClickListener {
-            viewModel.filterByRole("Healer")
-            dialog.dismiss()
-        }
-
-        view.findViewById<View>(R.id.btnFilterAssassin).setOnClickListener {
-            viewModel.filterByRole("Assassin")
             dialog.dismiss()
         }
 

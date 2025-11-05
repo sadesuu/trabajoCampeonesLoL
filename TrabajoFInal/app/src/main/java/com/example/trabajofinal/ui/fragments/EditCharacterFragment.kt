@@ -42,13 +42,13 @@ class EditCharacterFragment : Fragment() {
 
     private fun setupSpinners() {
         // Type spinner
-        val types = arrayOf("Knight", "Warrior", "Mage", "Ranger", "Rogue", "Paladin")
+        val types = arrayOf("Luchador", "Mago", "Tanque", "Asesino")
         val typeAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, types)
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerType.adapter = typeAdapter
 
         // Role spinner
-        val roles = arrayOf("DPS", "Tank", "Support", "Healer", "Assassin")
+        val roles = arrayOf("Top", "Mid", "Jungler", "ADC", "Support")
         val roleAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, roles)
         roleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerRole.adapter = roleAdapter
@@ -59,8 +59,8 @@ class EditCharacterFragment : Fragment() {
         binding.etImageUrl.setText(character.imageUrl)
 
         // Set spinner selections
-        val roles = arrayOf("DPS", "Tank", "Support", "Healer", "Assassin")
-        val types = arrayOf("Knight", "Warrior", "Mage", "Ranger", "Rogue", "Paladin")
+        val types = arrayOf("Luchador", "Mago", "Tanque", "Asesino")
+        val roles = arrayOf("Top", "Mid", "Jungler", "ADC", "Support")
 
         binding.spinnerRole.setSelection(roles.indexOf(character.role).coerceAtLeast(0))
         binding.spinnerType.setSelection(types.indexOf(character.type).coerceAtLeast(0))
@@ -91,16 +91,8 @@ class EditCharacterFragment : Fragment() {
             id = character.id, // Keep the same ID
             name = name,
             imageUrl = imageUrl,
-            race = "",
-            role = role,
             type = type,
-            faction = "",
-            level = 0,
-            attack = 0,
-            defense = 0,
-            speed = 0,
-            magic = 0,
-            biography = ""
+            role = role
         )
 
         // Use the updateCharacter function from ViewModel

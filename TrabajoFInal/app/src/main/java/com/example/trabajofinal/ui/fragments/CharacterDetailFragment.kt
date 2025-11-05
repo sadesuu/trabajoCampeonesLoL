@@ -44,13 +44,6 @@ class CharacterDetailFragment : Fragment() {
         binding.tvCharacterName.text = character.name
         binding.tvCharacterType.text = character.type
         binding.tvCharacterRole.text = character.role
-        binding.tvCharacterFaction.text = character.faction
-        binding.tvCharacterLevel.text = character.level.toString()
-        binding.tvCharacterAttack.text = character.attack.toString()
-        binding.tvCharacterDefense.text = character.defense.toString()
-        binding.tvCharacterSpeed.text = character.speed.toString()
-        binding.tvCharacterMagic.text = character.magic.toString()
-        binding.tvCharacterBiography.text = character.biography
 
         Glide.with(this)
             .load(character.imageUrl)

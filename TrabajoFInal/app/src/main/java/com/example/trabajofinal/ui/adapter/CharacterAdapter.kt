@@ -34,12 +34,15 @@ class CharacterAdapter(
         val character = characters[position]
 
         holder.nameTextView.text = character.name
-        holder.raceTextView.text = character.race
+        holder.raceTextView.text = character.type
         holder.roleTextView.text = character.role
+
+        // Convert Google Drive URL if needed
+        val imageUrl = convertDriveUrl(character.imageUrl)
 
         // Load image with Glide
         Glide.with(holder.imageView.context)
-            .load(character.imageUrl)
+            .load(imageUrl)
             .placeholder(R.drawable.ic_launcher_foreground)
             .error(R.drawable.ic_launcher_foreground)
             .into(holder.imageView)
@@ -54,6 +57,28 @@ class CharacterAdapter(
     fun updateCharacters(newCharacters: List<Character>) {
         characters = newCharacters
         notifyDataSetChanged()
+    }
+
+    private fun convertDriveUrl(url: String): String {
+        if (url.isEmpty()) return url
+        
+        // Si ya es una URL directa, retornarla
+        if (url.contains("drive.google.com/uc?")) {
+            return url
+        }
+        
+        // Convertir URL de Google Drive al formato directo
+        // Formato: https://drive.google.com/file/d/FILE_ID/view
+        // A: https://drive.google.com/uc?export=view&id=FILE_ID
+        val driveFilePattern = "drive\\.google\\.com/file/d/([^/]+)".toRegex()
+        val match = driveFilePattern.find(url)
+        
+        return if (match != null) {
+            val fileId = match.groupValues[1]
+            "https://drive.google.com/uc?export=view&id=$fileId"
+        } else {
+            url
+        }
     }
 }
 

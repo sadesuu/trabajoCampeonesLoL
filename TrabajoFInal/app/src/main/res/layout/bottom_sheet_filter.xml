@@ -35,19 +35,37 @@
         android:layout_marginBottom="8dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnFilterTank"
+        android:id="@+id/btnFilterTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/role_tank"
+        android:text="Top"
         android:textColor="#FFFFFF"
         android:backgroundTint="#2A3A4A"
         android:layout_marginBottom="8dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnFilterDPS"
+        android:id="@+id/btnFilterMid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/role_dps"
+        android:text="Mid"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2A3A4A"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFilterJungler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Jungler"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#2A3A4A"
+        android:layout_marginBottom="8dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFilterADC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ADC"
         android:textColor="#FFFFFF"
         android:backgroundTint="#2A3A4A"
         android:layout_marginBottom="8dp" />
@@ -56,25 +74,7 @@
         android:id="@+id/btnFilterSupport"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/role_support"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#2A3A4A"
-        android:layout_marginBottom="8dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnFilterHealer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/role_healer"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#2A3A4A"
-        android:layout_marginBottom="8dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnFilterAssassin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/role_assassin"
+        android:text="Support"
         android:textColor="#FFFFFF"
         android:backgroundTint="#2A3A4A"
         android:layout_marginBottom="8dp" />
