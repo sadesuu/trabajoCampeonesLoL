@@ -22,16 +22,8 @@
     <!-- Character Detail -->
     <string name="character_title">Personaje</string>
     <string name="key_attributes">Atributos Clave</string>
-    <string name="type_class">Tipo/Clase</string>
-    <string name="role_function">Rol/Función</string>
-    <string name="faction_alignment">Facción/Alineamiento</string>
-    <string name="level_power">Nivel/Poder</string>
-    <string name="detailed_stats">Estadísticas Detalladas</string>
-    <string name="stat_attack">Ataque</string>
-    <string name="stat_defense">Defensa</string>
-    <string name="stat_speed">Velocidad</string>
-    <string name="stat_magic">Magia</string>
-    <string name="biography">Biografía</string>
+    <string name="type_class">Tipo</string>
+    <string name="role_function">Rol</string>
     <string name="btn_delete">Borrar</string>
     <string name="btn_edit">Editar</string>
     <string name="btn_back">Volver</string>

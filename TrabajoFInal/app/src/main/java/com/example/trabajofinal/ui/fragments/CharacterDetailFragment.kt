@@ -41,38 +41,26 @@ class CharacterDetailFragment : Fragment() {
     }
 
     private fun displayCharacterDetails() {
-        binding.tvCharacterName.text = character.name
-        binding.tvCharacterType.text = character.type
+        // Mostrar nombre del campeón
+        binding.tvCharacterName.text = character.name.ifBlank { "Sin nombre" }
 
-        // Función local para detectar si una cadena parece una URL/imagen
-        fun looksLikeUrl(s: String): Boolean {
-            if (s.isBlank()) return false
-            val lower = s.lowercase()
-            val extPattern = ".*\\.(png|jpg|jpeg|gif|webp)".toRegex(RegexOption.IGNORE_CASE)
-            return lower.contains("http") || lower.contains("drive.google.com") || lower.contains("docs.google.com") || lower.contains("googleusercontent.com") || extPattern.matches(s)
-        }
+        // Mostrar tipo del campeón (Luchador, Mago, Tanque, etc.)
+        binding.tvCharacterType.text = character.type.ifBlank { "Tipo desconocido" }
 
-        // Preferir la URL normalizada desde el backend
-        val candidateFromBackend = if (character.imagePublicUrl.isNotBlank()) character.imagePublicUrl else ""
+        // Mostrar rol del campeón (Top, Mid, Jungler, ADC, Support)
+        binding.tvCharacterRole.text = character.role.ifBlank { "Rol desconocido" }
 
-        val candidateImageField = when {
-            candidateFromBackend.isNotBlank() -> candidateFromBackend
-            looksLikeUrl(character.role) -> character.role
-            looksLikeUrl(character.imageUrl) -> character.imageUrl
+        // Cargar imagen del campeón
+        // Priorizar imagePublicUrl (URL directa) sobre imageUrl
+        val imageToLoad = when {
+            character.imagePublicUrl.isNotBlank() -> character.imagePublicUrl
+            character.imageUrl.isNotBlank() -> character.imageUrl
             else -> ""
         }
 
-        val roleText = when {
-            character.imageUrl.isNotBlank() && !looksLikeUrl(character.imageUrl) -> character.imageUrl
-            character.role.isNotBlank() && !looksLikeUrl(character.role) -> character.role
-            else -> "Rol desconocido"
-        }
-
-        binding.tvCharacterRole.text = roleText
-
-        if (candidateImageField.isNotBlank()) {
+        if (imageToLoad.isNotBlank()) {
             Glide.with(this)
-                .load(candidateImageField)
+                .load(imageToLoad)
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .error(R.drawable.ic_launcher_foreground)
                 .into(binding.ivCharacterImage)
