@@ -12,8 +12,7 @@ import java.net.URL
 class CharacterRepository {
 
     // URL de tu API de Google Apps Script
-    private val apiUrl = "https://script.google.com/macros/s/AKfycbymP-W4ln9yhC7vqYhpBvbdASiO8wU81i3KJYqgifNJmYDcMTx54zbPf2CyK_40PLGwNw/exec"
-
+    private val apiUrl = "https://script.google.com/macros/s/AKfycby7SzUvdhpEapWLSe-8qOYOyRHFkRmEduwKIPo1QPtxqjS_Gn6N9HICx7tK3ikDWSHfrQ/exec"
     suspend fun getCharacters(): List<Character> {
         return withContext(Dispatchers.IO) {
             try {

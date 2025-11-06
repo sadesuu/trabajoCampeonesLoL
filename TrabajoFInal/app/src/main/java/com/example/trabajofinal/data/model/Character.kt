@@ -7,13 +7,13 @@ data class Character(
     @SerializedName("Marca temporal")
     val timestamp: String = "",
 
-    @SerializedName("Nombre")  // ← Cambiado de "nombre" a "Nombre" (con mayúscula)
+    @SerializedName("Nombre")
     val name: String = "",
 
-    @SerializedName("Imaguen Del Campeon")  // ← Cambiado de "fotografía" a "Imaguen Del Campeon"
+    @SerializedName("Imagen Del Campeon")
     val imageUrl: String = "",
 
-    @SerializedName("Enlace directo")  // ← Mantener por si el trigger genera esta columna
+    @SerializedName("Enlace directo")
     val imagePublicUrl: String = "",
 
     @SerializedName("Tipo")  // ← Cambiado de "tipo" a "Tipo" (con mayúscula)
