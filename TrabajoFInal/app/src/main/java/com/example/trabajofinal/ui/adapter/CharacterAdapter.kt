@@ -1,6 +1,5 @@
 package com.example.trabajofinal.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.trabajofinal.R
 import com.example.trabajofinal.data.model.Character
+import com.example.trabajofinal.util.UrlUtils
 
 class CharacterAdapter(
     private val onCharacterClick: (Character) -> Unit
@@ -26,44 +26,80 @@ class CharacterAdapter(
         val roleTextView: TextView = view.findViewById(R.id.tvCharacterRole)
 
         fun bind(character: Character, onCharacterClick: (Character) -> Unit) {
-            // Log para debugging
-            Log.d("CharacterViewHolder", "Binding character: ${character.name}, type: ${character.type}, role: ${character.role}, imageUrl: ${character.imageUrl}, imagePublicUrl: ${character.imagePublicUrl}")
-
-            // Asignar textos directamente desde el JSON
             nameTextView.text = character.name.ifBlank { "Sin nombre" }
             raceTextView.text = character.type.ifBlank { "Tipo desconocido" }
             roleTextView.text = character.role.ifBlank { "Rol desconocido" }
 
-            // Función simple para validar si una cadena parece una URL utilizable
-            fun isValidUrl(s: String?): Boolean {
-                if (s.isNullOrBlank()) return false
-                val lower = s.lowercase()
-                val extPattern = ".*\\.(png|jpg|jpeg|gif|webp)".toRegex(RegexOption.IGNORE_CASE)
-                return lower.startsWith("http://") || lower.startsWith("https://") || lower.contains("drive.google.com") || lower.contains("docs.google.com") || lower.contains("googleusercontent.com") || extPattern.matches(s)
-            }
-
-            // Priorizar imagePublicUrl (directa), luego imageUrl
+            // Priorizar imagePublicUrl (URL directa de Google Drive) sobre imageUrl
             val imageToLoad = when {
                 isValidUrl(character.imagePublicUrl) -> character.imagePublicUrl
                 isValidUrl(character.imageUrl) -> character.imageUrl
-                else -> ""
+                else -> null
             }
 
-            if (imageToLoad.isBlank()) {
-                Log.w("CharacterViewHolder", "No se encontró URL de imagen válida para ${character.name}; se usa placeholder")
-                imageView.setImageResource(R.drawable.ic_launcher_foreground)
-            } else {
-                Log.d("CharacterViewHolder", "Loading image from: $imageToLoad for ${character.name}")
+            val normalized = imageToLoad?.let { UrlUtils.toDirectDriveImageUrl(it) }
+            if (imageToLoad != normalized) {
+                android.util.Log.d("CharacterAdapter", "Normalized URL: '$imageToLoad' -> '$normalized'")
+            }
+
+            // Log para debug
+            android.util.Log.d("CharacterAdapter", "Character: ${character.name}")
+            android.util.Log.d("CharacterAdapter", "imageUrl: '${character.imageUrl}'")
+            android.util.Log.d("CharacterAdapter", "imagePublicUrl: '${character.imagePublicUrl}'")
+            android.util.Log.d("CharacterAdapter", "imageToLoad: '$imageToLoad'")
+            android.util.Log.d("CharacterAdapter", "imageNormalized: '$normalized'")
+
+            // Cargar imagen con Glide
+            if (normalized != null) {
                 Glide.with(itemView.context)
-                    .load(imageToLoad)
+                    .load(normalized)
                     .placeholder(R.drawable.ic_launcher_foreground)
                     .error(R.drawable.ic_launcher_background)
+                    .listener(object : com.bumptech.glide.request.RequestListener<android.graphics.drawable.Drawable> {
+                        override fun onLoadFailed(
+                            e: com.bumptech.glide.load.engine.GlideException?,
+                            model: Any?,
+                            target: com.bumptech.glide.request.target.Target<android.graphics.drawable.Drawable>,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            android.util.Log.e("CharacterAdapter", "Error loading image: $imageToLoad", e)
+                            e?.logRootCauses("CharacterAdapter")
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            resource: android.graphics.drawable.Drawable,
+                            model: Any,
+                            target: com.bumptech.glide.request.target.Target<android.graphics.drawable.Drawable>?,
+                            dataSource: com.bumptech.glide.load.DataSource,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            android.util.Log.d("CharacterAdapter", "Image loaded successfully: $imageToLoad")
+                            return false
+                        }
+                    })
                     .into(imageView)
+            } else {
+                android.util.Log.w("CharacterAdapter", "No valid image URL for ${character.name}")
+                imageView.setImageResource(R.drawable.ic_launcher_foreground)
             }
 
             cardView.setOnClickListener {
                 onCharacterClick(character)
             }
+        }
+
+        /**
+         * Valida si una cadena es una URL válida para mostrar imágenes
+         */
+        private fun isValidUrl(s: String?): Boolean {
+            if (s.isNullOrBlank()) return false
+            val lower = s.lowercase()
+            return lower.startsWith("http://") ||
+                   lower.startsWith("https://") ||
+                   lower.contains("drive.google.com") ||
+                   lower.contains("docs.google.com") ||
+                   lower.contains("googleusercontent.com")
         }
     }
 
@@ -74,9 +110,7 @@ class CharacterAdapter(
     }
 
     override fun onBindViewHolder(holder: CharacterViewHolder, position: Int) {
-        val character = getItem(position)
-        Log.d("Adapter", "Binding position $position: ${character.name}, ${character.type}, ${character.role}")
-        holder.bind(character, onCharacterClick)
+        holder.bind(getItem(position), onCharacterClick)
     }
 
     class CharacterDiffCallback : DiffUtil.ItemCallback<Character>() {

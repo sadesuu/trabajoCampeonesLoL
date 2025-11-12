@@ -1,12 +1,10 @@
 package com.example.trabajofinal.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -92,7 +90,7 @@ class CharacterListFragment : Fragment() {
 
     private fun showFilterDialog() {
         val dialog = BottomSheetDialog(requireContext())
-        val view = layoutInflater.inflate(R.layout.bottom_sheet_filter, null, false)
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_filter, binding.root as ViewGroup, false)
 
         view.findViewById<View>(R.id.btnSortAlphabetically).setOnClickListener {
             viewModel.sortAlphabetically()
@@ -135,17 +133,8 @@ class CharacterListFragment : Fragment() {
 
     private fun observeViewModel() {
         viewModel.filteredCharacters.observe(viewLifecycleOwner) { characters ->
-            Log.d("CharacterListFragment", "filteredCharacters updated: size=${characters.size}")
             adapter.submitList(characters)
 
-            // 🔍 DEBUG: Toast temporal para ver cuántos personajes llegaron
-            Toast.makeText(
-                requireContext(),
-                "Personajes recibidos: ${characters.size}",
-                Toast.LENGTH_SHORT
-            ).show()
-
-            // Mostrar mensaje de estado vacío si no hay items
             if (characters.isEmpty()) {
                 binding.tvEmptyState.visibility = View.VISIBLE
                 binding.recyclerViewCharacters.visibility = View.GONE
@@ -161,9 +150,6 @@ class CharacterListFragment : Fragment() {
 
         viewModel.error.observe(viewLifecycleOwner) { errMsg ->
             if (!errMsg.isNullOrBlank()) {
-                Log.e("CharacterListFragment", "Error from ViewModel: $errMsg")
-                // 🔍 DEBUG: Mostrar error en Toast también
-                Toast.makeText(requireContext(), "Error: $errMsg", Toast.LENGTH_LONG).show()
                 binding.tvEmptyState.text = getString(R.string.error_loading_data)
                 binding.tvEmptyState.visibility = View.VISIBLE
                 binding.recyclerViewCharacters.visibility = View.GONE
