@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/characterListFragment">
+
+    <!-- Fragment de lista de campeones (inicio) -->
+    <fragment
+        android:id="@+id/characterListFragment"
+        android:name="com.example.trabajofinal.ui.fragments.CharacterListFragment"
+        android:label="Lista de Campeones"
+        tools:layout="@layout/fragment_character_list">
+
+        <!-- Acción para navegar al detalle de un campeón -->
+        <action
+            android:id="@+id/action_characterListFragment_to_characterDetailFragment"
+            app:destination="@id/characterDetailFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+
+        <!-- Acción para navegar a agregar campeón -->
+        <action
+            android:id="@+id/action_characterListFragment_to_addCharacterFragment"
+            app:destination="@id/addCharacterFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <!-- Fragment de detalle de campeón -->
+    <fragment
+        android:id="@+id/characterDetailFragment"
+        android:name="com.example.trabajofinal.ui.fragments.CharacterDetailFragment"
+        android:label="Detalle del Campeón"
+        tools:layout="@layout/fragment_character_detail">
+
+        <!-- Argumentos que recibe desde la lista -->
+        <argument
+            android:name="characterTimestamp"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="characterName"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="characterRole"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="characterType"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="characterImageUrl"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <!-- Acción para navegar al editor -->
+        <action
+            android:id="@+id/action_characterDetailFragment_to_editCharacterFragment"
+            app:destination="@id/editCharacterFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+
+    <!-- Fragment para agregar campeón -->
+    <fragment
+        android:id="@+id/addCharacterFragment"
+        android:name="com.example.trabajofinal.ui.fragments.AddCharacterFragment"
+        android:label="Agregar Campeón"
+        tools:layout="@layout/fragment_add_character" />
+
+    <!-- Fragment para editar campeón -->
+    <fragment
+        android:id="@+id/editCharacterFragment"
+        android:name="com.example.trabajofinal.ui.fragments.EditCharacterFragment"
+        android:label="Editar Campeón"
+        tools:layout="@layout/fragment_add_character">
+
+        <!-- Argumentos que recibe desde el detalle -->
+        <argument
+            android:name="characterTimestamp"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="characterName"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="characterRole"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="characterType"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <argument
+            android:name="characterImageUrl"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+</navigation>
+

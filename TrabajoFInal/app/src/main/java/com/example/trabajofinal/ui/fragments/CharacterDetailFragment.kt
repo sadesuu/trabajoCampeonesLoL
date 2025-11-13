@@ -1,15 +1,15 @@
 package com.example.trabajofinal.ui.fragments
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.trabajofinal.R
-import com.example.trabajofinal.data.model.Character
 import com.example.trabajofinal.databinding.FragmentCharacterDetailBinding
 import com.example.trabajofinal.ui.viewmodel.CharacterViewModel
 import com.example.trabajofinal.util.UrlUtils
@@ -21,7 +21,7 @@ class CharacterDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: CharacterViewModel by activityViewModels()
-    private lateinit var character: Character
+    private val args: CharacterDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,13 +35,6 @@ class CharacterDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Get character from arguments
-        character = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getSerializable(ARG_CHARACTER, Character::class.java)!!
-        } else {
-            @Suppress("DEPRECATION")
-            arguments?.getSerializable(ARG_CHARACTER) as Character
-        }
 
         displayCharacterDetails()
         setupButtons()
@@ -65,32 +58,25 @@ class CharacterDetailFragment : Fragment() {
 
     private fun displayCharacterDetails() {
         // Mostrar nombre del campeón
-        binding.tvCharacterName.text = character.name.ifBlank { "Sin nombre" }
+        binding.tvCharacterName.text = args.characterName.ifBlank { "Sin nombre" }
 
         // Mostrar tipo del campeón (Luchador, Mago, Tanque, etc.)
-        binding.tvCharacterType.text = character.type.ifBlank { "Tipo desconocido" }
+        binding.tvCharacterType.text = args.characterType.ifBlank { "Tipo desconocido" }
 
         // Mostrar rol del campeón (Top, Mid, Jungler, ADC, Support)
-        binding.tvCharacterRole.text = character.role.ifBlank { "Rol desconocido" }
+        binding.tvCharacterRole.text = args.characterRole.ifBlank { "Rol desconocido" }
 
         // Cargar imagen del campeón
-        // Priorizar imagePublicUrl (URL directa) sobre imageUrl
-        val imageToLoad = when {
-            character.imagePublicUrl.isNotBlank() -> character.imagePublicUrl
-            character.imageUrl.isNotBlank() -> character.imageUrl
-            else -> ""
-        }
-
+        val imageToLoad = args.characterImageUrl
         val normalized = UrlUtils.toDirectDriveImageUrl(imageToLoad)
+
         if (imageToLoad != normalized) {
             android.util.Log.d("CharacterDetail", "Normalized URL: '$imageToLoad' -> '$normalized'")
         }
 
         // Log para debug
-        android.util.Log.d("CharacterDetail", "Character: ${character.name}")
-        android.util.Log.d("CharacterDetail", "imageUrl: '${character.imageUrl}'")
-        android.util.Log.d("CharacterDetail", "imagePublicUrl: '${character.imagePublicUrl}'")
-        android.util.Log.d("CharacterDetail", "imageToLoad: '$imageToLoad'")
+        android.util.Log.d("CharacterDetail", "Character: ${args.characterName}")
+        android.util.Log.d("CharacterDetail", "imageUrl: '${args.characterImageUrl}'")
         android.util.Log.d("CharacterDetail", "imageNormalized: '$normalized'")
 
         if (normalized?.isNotBlank() == true) {
@@ -130,7 +116,7 @@ class CharacterDetailFragment : Fragment() {
 
     private fun setupButtons() {
         binding.btnBack.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            findNavController().navigateUp()
         }
 
         binding.btnDelete.setOnClickListener {
@@ -138,22 +124,26 @@ class CharacterDetailFragment : Fragment() {
         }
 
         binding.btnEdit.setOnClickListener {
-            // Navigate to edit fragment
-            val editFragment = EditCharacterFragment.newInstance(character)
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, editFragment)
-                .addToBackStack(null)
-                .commit()
+            // Navigate to edit fragment using Navigation Component
+            val action = CharacterDetailFragmentDirections
+                .actionCharacterDetailFragmentToEditCharacterFragment(
+                    characterTimestamp = args.characterTimestamp,
+                    characterName = args.characterName,
+                    characterRole = args.characterRole,
+                    characterType = args.characterType,
+                    characterImageUrl = args.characterImageUrl
+                )
+            findNavController().navigate(action)
         }
     }
 
     private fun showDeleteConfirmationDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Eliminar Personaje")
-            .setMessage("¿Estás seguro de que deseas eliminar a ${character.name}?")
+            .setMessage("¿Estás seguro de que deseas eliminar a ${args.characterName}?")
             .setPositiveButton("Eliminar") { _, _ ->
-                viewModel.deleteCharacter(character.id)
-                parentFragmentManager.popBackStack()
+                viewModel.deleteCharacter(args.characterName)
+                // Quitar navigateUp inmediato; el observer de successMessage hará el pop
             }
             .setNegativeButton("Cancelar", null)
             .show()
@@ -162,17 +152,5 @@ class CharacterDetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        private const val ARG_CHARACTER = "character"
-
-        fun newInstance(character: Character): CharacterDetailFragment {
-            val fragment = CharacterDetailFragment()
-            val args = Bundle()
-            args.putSerializable(ARG_CHARACTER, character)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

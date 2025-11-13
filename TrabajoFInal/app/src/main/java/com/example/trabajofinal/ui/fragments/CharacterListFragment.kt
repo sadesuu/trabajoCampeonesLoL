@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.trabajofinal.R
 import com.example.trabajofinal.databinding.FragmentCharacterListBinding
@@ -46,12 +47,16 @@ class CharacterListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         adapter = CharacterAdapter { character ->
-            // Navigate to detail fragment
-            val detailFragment = CharacterDetailFragment.newInstance(character)
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, detailFragment)
-                .addToBackStack(null)
-                .commit()
+            // Navigate to detail fragment using Navigation Component
+            val action = CharacterListFragmentDirections
+                .actionCharacterListFragmentToCharacterDetailFragment(
+                    characterTimestamp = character.timestamp,
+                    characterName = character.name,
+                    characterRole = character.role,
+                    characterType = character.type,
+                    characterImageUrl = character.imagePublicUrl
+                )
+            findNavController().navigate(action)
         }
 
         binding.recyclerViewCharacters.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -79,12 +84,10 @@ class CharacterListFragment : Fragment() {
 
     private fun setupFab() {
         binding.fabAddCharacter.setOnClickListener {
-            // Navigate to add character fragment
-            val addFragment = AddCharacterFragment()
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, addFragment)
-                .addToBackStack(null)
-                .commit()
+            // Navigate to add character fragment using Navigation Component
+            val action = CharacterListFragmentDirections
+                .actionCharacterListFragmentToAddCharacterFragment()
+            findNavController().navigate(action)
         }
     }
 

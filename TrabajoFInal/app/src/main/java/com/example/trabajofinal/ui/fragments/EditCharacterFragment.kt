@@ -1,7 +1,6 @@
 package com.example.trabajofinal.ui.fragments
 
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +10,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.example.trabajofinal.data.model.Character
 import com.example.trabajofinal.databinding.FragmentAddCharacterBinding
@@ -26,7 +27,7 @@ class EditCharacterFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: CharacterViewModel by activityViewModels()
-    private lateinit var character: Character
+    private val args: EditCharacterFragmentArgs by navArgs()
 
     private var selectedImageBase64: String = ""
     private var selectedImageFileName: String = ""
@@ -49,13 +50,6 @@ class EditCharacterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Get character from arguments
-        character = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getSerializable(ARG_CHARACTER, Character::class.java)!!
-        } else {
-            @Suppress("DEPRECATION")
-            arguments?.getSerializable(ARG_CHARACTER) as Character
-        }
 
         setupSpinners()
         populateFields()
@@ -69,9 +63,8 @@ class EditCharacterFragment : Fragment() {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 // Limpiar el mensaje antes de navegar
                 viewModel.clearMessages()
-                // Navigate back to character list (pop twice to skip detail fragment)
-                parentFragmentManager.popBackStack()
-                parentFragmentManager.popBackStack()
+                // Navigate back to character list
+                findNavController().popBackStack(findNavController().graph.startDestinationId, false)
             }
         }
 
@@ -99,10 +92,10 @@ class EditCharacterFragment : Fragment() {
     }
 
     private fun populateFields() {
-        binding.etName.setText(character.name)
-        binding.etImageUrl.setText(character.imageUrl)
+        binding.etName.setText(args.characterName)
+        binding.etImageUrl.setText(args.characterImageUrl)
         // preview
-        val previewUrl = if (character.imagePublicUrl.isNotBlank()) character.imagePublicUrl else character.imageUrl
+        val previewUrl = args.characterImageUrl
         if (previewUrl.isNotBlank()) {
             Glide.with(this).load(previewUrl).into(binding.ivPreview)
         }
@@ -111,13 +104,13 @@ class EditCharacterFragment : Fragment() {
         val types = arrayOf("Luchador", "Mago", "Tanque", "Asesino")
         val roles = arrayOf("Top", "Mid", "Jungler", "ADC", "Support")
 
-        binding.spinnerRole.setSelection(roles.indexOf(character.role).coerceAtLeast(0))
-        binding.spinnerType.setSelection(types.indexOf(character.type).coerceAtLeast(0))
+        binding.spinnerRole.setSelection(roles.indexOf(args.characterRole).coerceAtLeast(0))
+        binding.spinnerType.setSelection(types.indexOf(args.characterType).coerceAtLeast(0))
     }
 
     private fun setupButtons() {
         binding.btnCancel.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            findNavController().navigateUp()
         }
 
         binding.btnSave.setOnClickListener {
@@ -181,15 +174,15 @@ class EditCharacterFragment : Fragment() {
         }
 
         val updatedCharacter = Character(
-            timestamp = character.timestamp,
+            timestamp = args.characterTimestamp, // Usar el timestamp original
             name = name,
             imageUrl = imageUrl,
-            imagePublicUrl = character.imagePublicUrl,
+            imagePublicUrl = args.characterImageUrl, // Mantener la URL pública existente
             type = type,
             role = role,
             imageBase64 = selectedImageBase64,
             imageFileName = if (selectedImageFileName.isNotBlank()) selectedImageFileName else "${name.replace(' ', '_')}.jpg",
-            originalName = character.name // <- clave para localizar fila si el nombre cambió
+            originalName = args.characterName // <- clave para localizar fila si el nombre cambió
         )
 
         // Use the updateCharacter function from ViewModel
@@ -199,17 +192,5 @@ class EditCharacterFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        private const val ARG_CHARACTER = "character"
-
-        fun newInstance(character: Character): EditCharacterFragment {
-            val fragment = EditCharacterFragment()
-            val args = Bundle()
-            args.putSerializable(ARG_CHARACTER, character)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

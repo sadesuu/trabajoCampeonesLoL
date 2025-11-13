@@ -19,6 +19,7 @@ import com.example.trabajofinal.ui.viewmodel.CharacterViewModel
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import android.util.Base64
+import androidx.navigation.fragment.NavHostFragment
 
 class AddCharacterFragment : Fragment() {
 
@@ -60,7 +61,8 @@ class AddCharacterFragment : Fragment() {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 // Limpiar el mensaje antes de navegar para evitar que se muestre de nuevo
                 viewModel.clearMessages()
-                parentFragmentManager.popBackStack()
+                // Usar NavController para volver sin depender de KTX
+                NavHostFragment.findNavController(this).navigateUp()
             }
         }
 
@@ -89,7 +91,8 @@ class AddCharacterFragment : Fragment() {
 
     private fun setupButtons() {
         binding.btnCancel.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            // Volver usando el NavController sin KTX
+            NavHostFragment.findNavController(this).navigateUp()
         }
 
         binding.btnSave.setOnClickListener {
@@ -136,15 +139,14 @@ class AddCharacterFragment : Fragment() {
 
     private fun readImageAsBase64(uri: Uri): String? {
         return try {
-            val input: InputStream? = requireContext().contentResolver.openInputStream(uri)
+            val input: InputStream = requireContext().contentResolver.openInputStream(uri) ?: return null
             input.use { ins ->
-                if (ins == null) return null
                 // Opcional: decodificar y recomprimir para no exceder tamaño (p.e., máx ~1.5MB)
                 val bytes = ins.readBytes()
                 // Si el archivo es muy grande, recomprimir a JPEG
                 val MAX_SIZE = 1_500_000 // ~1.5MB
                 if (bytes.size > MAX_SIZE) {
-                    val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                    val bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.size) ?: return null
                     val out = ByteArrayOutputStream()
                     // calidad 80 para reducir tamaño
                     bmp.compress(android.graphics.Bitmap.CompressFormat.JPEG, 80, out)

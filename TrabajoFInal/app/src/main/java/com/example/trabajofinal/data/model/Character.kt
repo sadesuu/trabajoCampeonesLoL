@@ -22,7 +22,7 @@ data class Character(
     val name: String = "",
 
     /** URL de la imagen cargada desde Google Drive (formato original) */
-    @SerializedName("Imagen Del Campeon")
+    @SerializedName("Imagen del Campeón")
     val imageUrl: String = "",
 
     /** URL directa generada por el script para visualización (formato: drive.google.com/uc?export=view&id=...) */
